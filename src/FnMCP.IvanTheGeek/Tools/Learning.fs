@@ -140,7 +140,7 @@ let handleRecordLearning (basePath: string) (args: JsonElement) : Result<string,
             RelatedPatterns = []
         }
 
-        let eventPath = writeLearningEvent basePath meta description
+        let eventPath = writeLearningEvent basePath None meta description
         Ok (sprintf "Learning event recorded: %s" (System.IO.Path.GetFileName(eventPath)))
     with
     | ex -> Error ($"Failed to record learning: {ex.Message}")

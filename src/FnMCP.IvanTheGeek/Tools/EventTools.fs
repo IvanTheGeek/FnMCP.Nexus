@@ -67,6 +67,10 @@ module EventTools =
                     ``type`` = "string"
                     description = "TechnicalDecision: consequences"
                 |}
+                project = {|
+                    ``type`` = "string"
+                    description = "Optional project scope: core | laundrylog | perdiem | fnmcp-nexus (defaults to core)"
+                |}
             |}
             required = [| "type"; "title" |]
         |}
@@ -108,6 +112,7 @@ module EventTools =
             let tags = getArrayStrings args "tags"
             let author = getStringOpt args "author"
             let links = getArrayStrings args "links"
+            let project = getStringOpt args "project"
             let occurredAt =
                 match getStringOpt args "occurredAt" with
                 | Some s ->
@@ -136,7 +141,7 @@ module EventTools =
                 Links = links
                 Technical = techDetails
             }
-            let fullPath = writeEventFile basePath meta body
+            let fullPath = writeEventFile basePath project meta body
 
             // PHASE 2: Emit EventCreated system event
             let systemEvent : SystemEventMeta = {
@@ -152,7 +157,7 @@ module EventTools =
                 ToolName = None
                 Success = None
             }
-            EventWriter.writeSystemEvent basePath systemEvent |> ignore
+            EventWriter.writeSystemEvent basePath project systemEvent |> ignore
 
             Ok (sprintf "Event created: %s" (System.IO.Path.GetRelativePath(basePath, fullPath)))
         with
@@ -178,7 +183,7 @@ module EventTools =
                 ToolName = None
                 Success = None
             }
-            EventWriter.writeSystemEvent basePath systemEvent |> ignore
+            EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
             if List.isEmpty items then Ok "No events found."
             else

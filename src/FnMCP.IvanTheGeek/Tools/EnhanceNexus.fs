@@ -115,7 +115,7 @@ let private createEventFromSpec (basePath: string) (spec: EventSpec) : string =
         Technical = None
     }
 
-    let eventPath = EventWriter.writeEventFile basePath meta narrative
+    let eventPath = EventWriter.writeEventFile basePath None meta narrative
 
     // Emit EventCreated system event
     let systemEvent = {
@@ -131,7 +131,7 @@ let private createEventFromSpec (basePath: string) (spec: EventSpec) : string =
         ToolName = None
         Success = None
     }
-    EventWriter.writeSystemEvent basePath systemEvent |> ignore
+    EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
     eventPath
 
@@ -173,7 +173,7 @@ let enhanceNexus (basePath: string) (eventSpecs: EventSpec list) (projectionsToR
         ToolName = Some "enhance_nexus"
         Success = Some true
     }
-    EventWriter.writeSystemEvent basePath toolInvokedEvent |> ignore
+    EventWriter.writeSystemEvent basePath None toolInvokedEvent |> ignore
 
     // Return results
     {

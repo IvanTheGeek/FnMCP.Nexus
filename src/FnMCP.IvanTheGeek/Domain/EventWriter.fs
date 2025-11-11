@@ -63,8 +63,10 @@ open Helpers
 let ensureDirectory (path: string) =
     if not (Directory.Exists(path)) then Directory.CreateDirectory(path) |> ignore
 
-let eventDirectory (basePath: string) (dt: DateTime) =
-    Path.Combine(basePath, "nexus", "events", "domain", "active", monthFolder dt)
+let eventDirectory (basePath: string) (project: string option) (dt: DateTime) =
+    match project with
+    | Some proj -> Path.Combine(basePath, "nexus", "events", proj, "domain", "active", monthFolder dt)
+    | None -> Path.Combine(basePath, "nexus", "events", "domain", "active", monthFolder dt)
 
 let buildFilename (etype: EventType) (title: string) (dt: DateTime) =
     let guid = System.Guid.NewGuid().ToString("N").Substring(0, 8) // 8-char GUID suffix
@@ -73,8 +75,8 @@ let buildFilename (etype: EventType) (title: string) (dt: DateTime) =
     let name = sanitizeFilePart title
     $"{ts}_{et}_{name}_{guid}.md"
 
-let writeEventFile (basePath: string) (meta: EventMeta) (body: string) =
-    let dir = eventDirectory basePath meta.OccurredAt
+let writeEventFile (basePath: string) (project: string option) (meta: EventMeta) (body: string) =
+    let dir = eventDirectory basePath project meta.OccurredAt
     ensureDirectory dir
     let filename = buildFilename meta.Type meta.Title meta.OccurredAt
     let fullPath = Path.Combine(dir, filename)
@@ -88,8 +90,10 @@ let writeEventFile (basePath: string) (meta: EventMeta) (body: string) =
 
 module SystemEventHelpers =
     // System events go to different directory structure
-    let systemEventDirectory (basePath: string) (dt: DateTime) =
-        Path.Combine(basePath, "nexus", "events", "system", "active", Helpers.monthFolder dt)
+    let systemEventDirectory (basePath: string) (project: string option) (dt: DateTime) =
+        match project with
+        | Some proj -> Path.Combine(basePath, "nexus", "events", proj, "system", "active", Helpers.monthFolder dt)
+        | None -> Path.Combine(basePath, "nexus", "events", "system", "active", Helpers.monthFolder dt)
 
     // System event filename: timestamp_EventType_guid.yaml
     let buildSystemFilename (etype: SystemEventType) (dt: DateTime) =
@@ -135,8 +139,8 @@ module SystemEventHelpers =
 open SystemEventHelpers
 
 // Write system event (YAML only, no body)
-let writeSystemEvent (basePath: string) (meta: SystemEventMeta) : string =
-    let dir = systemEventDirectory basePath meta.OccurredAt
+let writeSystemEvent (basePath: string) (project: string option) (meta: SystemEventMeta) : string =
+    let dir = systemEventDirectory basePath project meta.OccurredAt
     ensureDirectory dir
     let filename = buildSystemFilename meta.Type meta.OccurredAt
     let fullPath = Path.Combine(dir, filename)
@@ -150,8 +154,10 @@ let writeSystemEvent (basePath: string) (meta: SystemEventMeta) : string =
 
 module LearningEventHelpers =
     // Learning events go to learning directory
-    let learningEventDirectory (basePath: string) (dt: DateTime) =
-        Path.Combine(basePath, "nexus", "events", "learning", "active", Helpers.monthFolder dt)
+    let learningEventDirectory (basePath: string) (project: string option) (dt: DateTime) =
+        match project with
+        | Some proj -> Path.Combine(basePath, "nexus", "events", proj, "learning", "active", Helpers.monthFolder dt)
+        | None -> Path.Combine(basePath, "nexus", "events", "learning", "active", Helpers.monthFolder dt)
 
     // Learning event filename: timestamp_EventType_PatternName_guid.md
     let buildLearningFilename (etype: LearningEventType) (patternName: string option) (dt: DateTime) =
@@ -210,8 +216,8 @@ module LearningEventHelpers =
 open LearningEventHelpers
 
 // Write learning event (YAML frontmatter + markdown body)
-let writeLearningEvent (basePath: string) (meta: LearningEventMeta) (body: string) : string =
-    let dir = learningEventDirectory basePath meta.OccurredAt
+let writeLearningEvent (basePath: string) (project: string option) (meta: LearningEventMeta) (body: string) : string =
+    let dir = learningEventDirectory basePath project meta.OccurredAt
     ensureDirectory dir
     let filename = buildLearningFilename meta.Type meta.PatternName meta.OccurredAt
     let fullPath = Path.Combine(dir, filename)

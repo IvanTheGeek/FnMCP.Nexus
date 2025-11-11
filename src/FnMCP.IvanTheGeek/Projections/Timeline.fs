@@ -9,12 +9,22 @@ open FnMCP.IvanTheGeek.Domain.Projections
 // Timeline projection: chronologically sorted events
 
 let readTimeline (basePath: string) : TimelineItem list =
-    let baseDir = Path.Combine(basePath, "nexus", "events", "domain", "active")
-    if not (Directory.Exists(baseDir)) then [] else
-    Directory.GetFiles(baseDir, "*.md", SearchOption.AllDirectories)
-    |> Array.choose (fun p -> tryParseEvent p |> Option.map id)
-    |> Array.sortBy (fun i -> i.OccurredAt)
-    |> Array.toList
+    // Read from both old and new project-scoped paths
+    let allDirs = [
+        Path.Combine(basePath, "nexus", "events", "domain", "active")  // Old path (backward compat)
+        Path.Combine(basePath, "nexus", "events", "core", "domain", "active")
+        Path.Combine(basePath, "nexus", "events", "laundrylog", "domain", "active")
+        Path.Combine(basePath, "nexus", "events", "perdiem", "domain", "active")
+        Path.Combine(basePath, "nexus", "events", "fnmcp-nexus", "domain", "active")
+    ]
+
+    allDirs
+    |> List.collect (fun dir ->
+        if Directory.Exists(dir) then
+            Directory.GetFiles(dir, "*.md", SearchOption.AllDirectories) |> Array.toList
+        else [])
+    |> List.choose tryParseEvent
+    |> List.sortBy (fun i -> i.OccurredAt)
 
 let generateEvolutionMarkdown (basePath: string) : string =
     let timeline = readTimeline basePath
@@ -88,7 +98,7 @@ let regenerateTimeline (basePath: string) : string =
         ToolName = None
         Success = None
     }
-    EventWriter.writeSystemEvent basePath systemEvent |> ignore
+    EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
     // Update projection registry
     let registryEntry = {

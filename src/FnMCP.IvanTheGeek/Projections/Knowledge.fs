@@ -354,7 +354,7 @@ module KnowledgeWriter =
             ToolName = None
             Success = None
         }
-        EventWriter.writeSystemEvent basePath systemEvent |> ignore
+        EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
         // Update projection registry
         let registryEntry = {
