@@ -19,7 +19,7 @@ module EventTools =
             properties = {|
                 ``type`` = {|
                     ``type`` = "string"
-                    description = "Event type: TechnicalDecision | DesignNote | ResearchFinding | FrameworkInsight"
+                    description = "Event type: TechnicalDecision | DesignNote | ResearchFinding | FrameworkInsight | MethodologyInsight | NexusInsight | SessionState | CrossProjectIdea"
                 |}
                 title = {|
                     ``type`` = "string"

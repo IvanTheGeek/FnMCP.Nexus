@@ -10,6 +10,10 @@ type EventType =
     | DesignNote
     | ResearchFinding
     | FrameworkInsight
+    | MethodologyInsight
+    | NexusInsight
+    | SessionState
+    | CrossProjectIdea
 
 with
     member this.AsString =
@@ -18,6 +22,10 @@ with
         | DesignNote -> "DesignNote"
         | ResearchFinding -> "ResearchFinding"
         | FrameworkInsight -> "FrameworkInsight"
+        | MethodologyInsight -> "MethodologyInsight"
+        | NexusInsight -> "NexusInsight"
+        | SessionState -> "SessionState"
+        | CrossProjectIdea -> "CrossProjectIdea"
 
     static member Parse(str: string) =
         let s = if isNull str then "" else str
@@ -26,6 +34,10 @@ with
         | "designnote" | "design_note" | "note" -> DesignNote
         | "researchfinding" | "research_finding" | "finding" -> ResearchFinding
         | "frameworkinsight" | "framework_insight" | "insight" -> FrameworkInsight
+        | "methodologyinsight" | "methodology_insight" -> MethodologyInsight
+        | "nexusinsight" | "nexus_insight" -> NexusInsight
+        | "sessionstate" | "session_state" -> SessionState
+        | "crossprojectidea" | "cross_project_idea" -> CrossProjectIdea
         | other -> failwith ($"Unknown event type: {other}")
 
 type TechnicalDecisionDetails = {
