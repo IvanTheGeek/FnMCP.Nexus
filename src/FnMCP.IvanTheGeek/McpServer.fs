@@ -5,6 +5,7 @@ open System.Text.Json
 open FnMCP.IvanTheGeek.Types
 open FnMCP.IvanTheGeek.ContentProvider
 open FnMCP.IvanTheGeek
+open FnMCP.IvanTheGeek.Prompts
 
 // MCP Server implementation with JSON-RPC message handling
 type McpServer(provider: IContentProvider, contextLibraryPath: string) =
@@ -12,10 +13,13 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
     member _.HandleInitialize(request: InitializeRequest) = async {
         return {
             ProtocolVersion = "2024-11-05"
-            Capabilities = box {| resources = {| listChanged = false |} |}
+            Capabilities = box {|
+                resources = {| listChanged = false |}
+                prompts = {| listChanged = false |}
+            |}
             ServerInfo = box {|
                 name = "FnMCP.IvanTheGeek"
-                version = "0.1.0"
+                version = "0.2.0"
             |}
         }
     }
@@ -42,8 +46,13 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
     }
 
     member _.HandleListPrompts() = async {
-        // Placeholder for future prompts implementation
-        return { Prompts = [] }
+        let prompts = getPromptList()
+        return { Prompts = prompts }
+    }
+
+    member _.HandleGetPrompt(name: string) = async {
+        let response = handleGetPrompt contextLibraryPath name
+        return response
     }
 
     // Main request handler - routes to appropriate method
@@ -85,6 +94,20 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
             | "prompts/list" ->
                 let! response = this.HandleListPrompts()
                 return Ok (box response)
+
+            | "prompts/get" ->
+                match jsonRpcRequest.Params with
+                | Some parameters ->
+                    let jsonElement = parameters :?> JsonElement
+                    let name = jsonElement.GetProperty("name").GetString()
+                    let! response = this.HandleGetPrompt(name)
+                    return Ok (box response)
+                | None ->
+                    return Error {
+                        Code = ErrorCodes.InvalidParams
+                        Message = "Missing prompt name parameter"
+                        Data = None
+                    }
 
             | "tools/call" ->
                 match jsonRpcRequest.Params with
