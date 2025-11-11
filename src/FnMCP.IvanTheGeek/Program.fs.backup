@@ -92,8 +92,8 @@ let main argv =
             match argv with
             | [| path |] -> path
             | _ -> 
-                // Default to context-library in project root
-                let projectRoot = Path.GetDirectoryName(Path.GetDirectoryName(__SOURCE_DIRECTORY__))
+                // Default to context-library relative to binary location
+                let projectRoot = Path.GetDirectoryName(AppContext.BaseDirectory)
                 Path.Combine(projectRoot, "context-library")
 
         log "FnMCP.IvanTheGeek MCP Server starting..."
