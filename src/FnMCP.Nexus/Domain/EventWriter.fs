@@ -1,9 +1,9 @@
-module FnMCP.IvanTheGeek.Domain.EventWriter
+module FnMCP.Nexus.Domain.EventWriter
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
+open FnMCP.Nexus.Domain
 
 // Event file writing with YAML frontmatter and markdown body
 

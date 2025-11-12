@@ -1,4 +1,4 @@
-namespace FnMCP.IvanTheGeek.Domain
+namespace FnMCP.Nexus.Domain
 
 open System
 

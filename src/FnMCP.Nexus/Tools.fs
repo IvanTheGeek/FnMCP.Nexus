@@ -1,10 +1,10 @@
-namespace FnMCP.IvanTheGeek
+namespace FnMCP.Nexus
 
 open System
 open System.IO
 open System.Text.Json
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.Tools
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.Tools
 
 // Tool definitions for the MCP server
 module ToolRegistry =

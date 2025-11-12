@@ -1,4 +1,4 @@
-module FnMCP.IvanTheGeek.Types
+module FnMCP.Nexus.Types
 
 // Core MCP protocol types following the specification
 

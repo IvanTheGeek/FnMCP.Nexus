@@ -1,10 +1,10 @@
-module FnMCP.IvanTheGeek.Projections.PendingIdeas
+module FnMCP.Nexus.Projections.PendingIdeas
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.Projections
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.Projections
 
 // PendingIdeas projection: show active cross-project ideas for a project
 

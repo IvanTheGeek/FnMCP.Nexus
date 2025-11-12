@@ -1,10 +1,11 @@
-module FnMCP.IvanTheGeek.Projections.Metrics
+module FnMCP.Nexus.Projections.Metrics
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.Projections.FrontMatterParser
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.Projections.FrontMatterParser
+open FnMCP.Nexus.Projections.Registry
 
 // ============================================================================
 // PHASE 2: Metrics Projection - Statistics from system events
@@ -173,14 +174,14 @@ module MetricsWriter =
         EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
         // Update projection registry
-        let registryEntry = {
-            Registry.Name = "metrics"
-            Registry.Path = Path.GetDirectoryName(outputPath)
-            Registry.Type = Metrics
-            Registry.LastRegenerated = DateTime.Now
-            Registry.Staleness = Fresh  // Always fresh since we just regenerated
+        let registryEntry : RegistryEntry = {
+            Name = "metrics"
+            Path = Path.GetDirectoryName(outputPath)
+            Type = Metrics
+            LastRegenerated = DateTime.Now
+            Staleness = Fresh  // Always fresh since we just regenerated
         }
-        Registry.RegistryIO.updateProjection basePath registryEntry
+        RegistryIO.updateProjection basePath registryEntry
 
         // Also write .meta.yaml
         let meta : Projections.ProjectionMeta = {

@@ -1,10 +1,11 @@
-module FnMCP.IvanTheGeek.Projections.Timeline
+module FnMCP.Nexus.Projections.Timeline
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.Projections
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.Projections
+open FnMCP.Nexus.Projections.Registry
 
 // Timeline projection: chronologically sorted events
 
@@ -101,14 +102,14 @@ let regenerateTimeline (basePath: string) : string =
     EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
     // Update projection registry
-    let registryEntry = {
-        Registry.Name = "timeline"
-        Registry.Path = Path.GetDirectoryName(outputPath)
-        Registry.Type = ProjectionType.Timeline
-        Registry.LastRegenerated = DateTime.Now
-        Registry.Staleness = Fresh
+    let registryEntry : RegistryEntry = {
+        Name = "timeline"
+        Path = Path.GetDirectoryName(outputPath)
+        Type = ProjectionType.Timeline
+        LastRegenerated = DateTime.Now
+        Staleness = Fresh
     }
-    Registry.RegistryIO.updateProjection basePath registryEntry
+    RegistryIO.updateProjection basePath registryEntry
 
     // Write .meta.yaml
     let meta : ProjectionMeta = {

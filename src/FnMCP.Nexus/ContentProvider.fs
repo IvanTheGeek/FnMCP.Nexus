@@ -1,6 +1,6 @@
-module FnMCP.IvanTheGeek.ContentProvider
+module FnMCP.Nexus.ContentProvider
 
-open FnMCP.IvanTheGeek.Types
+open FnMCP.Nexus.Types
 
 // Content provider abstraction for different content sources
 type IContentProvider =

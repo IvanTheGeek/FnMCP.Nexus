@@ -1,10 +1,11 @@
-module FnMCP.IvanTheGeek.Projections.Knowledge
+module FnMCP.Nexus.Projections.Knowledge
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.Projections.FrontMatterParser
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.Projections.FrontMatterParser
+open FnMCP.Nexus.Projections.Registry
 
 // ============================================================================
 // PHASE 3: Knowledge Projections - F# Learning from events
@@ -357,14 +358,14 @@ module KnowledgeWriter =
         EventWriter.writeSystemEvent basePath None systemEvent |> ignore
 
         // Update projection registry
-        let registryEntry = {
-            Registry.Name = "knowledge"
-            Registry.Path = outputPath
-            Registry.Type = ProjectionType.Knowledge
-            Registry.LastRegenerated = DateTime.Now
-            Registry.Staleness = Fresh
+        let registryEntry : RegistryEntry = {
+            Name = "knowledge"
+            Path = outputPath
+            Type = ProjectionType.Knowledge
+            LastRegenerated = DateTime.Now
+            Staleness = Fresh
         }
-        Registry.RegistryIO.updateProjection basePath registryEntry
+        RegistryIO.updateProjection basePath registryEntry
 
         // Write .meta.yaml
         let events = KnowledgeReader.readLearningEvents basePath

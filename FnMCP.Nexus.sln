@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FnMCP.IvanTheGeek", "src\FnMCP.IvanTheGeek\FnMCP.IvanTheGeek.fsproj", "{73198F6D-415C-4037-97DC-AFB0E589CF2B}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FnMCP.Nexus", "src\FnMCP.Nexus\FnMCP.Nexus.fsproj", "{73198F6D-415C-4037-97DC-AFB0E589CF2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

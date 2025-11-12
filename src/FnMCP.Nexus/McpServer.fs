@@ -1,11 +1,11 @@
-module FnMCP.IvanTheGeek.McpServer
+module FnMCP.Nexus.McpServer
 
 open System
 open System.Text.Json
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.ContentProvider
-open FnMCP.IvanTheGeek
-open FnMCP.IvanTheGeek.Prompts
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.ContentProvider
+open FnMCP.Nexus
+open FnMCP.Nexus.Prompts
 
 // MCP Server implementation with JSON-RPC message handling
 type McpServer(provider: IContentProvider, contextLibraryPath: string) =
@@ -18,7 +18,7 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
                 prompts = {| listChanged = false |}
             |}
             ServerInfo = box {|
-                name = "FnMCP.IvanTheGeek"
+                name = "FnMCP.Nexus"
                 version = "0.2.0"
             |}
         }

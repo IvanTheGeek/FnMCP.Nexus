@@ -1,11 +1,11 @@
-module FnMCP.IvanTheGeek.Prompts
+module FnMCP.Nexus.Prompts
 
 open System
 open System.IO
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.Projections
-open FnMCP.IvanTheGeek.Projections.PendingIdeas
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.Projections
+open FnMCP.Nexus.Projections.PendingIdeas
 
 // Define available prompts for each project
 let getPromptList () : Prompt list = [

@@ -1,8 +1,8 @@
-module FnMCP.IvanTheGeek.Domain.Projections
+module FnMCP.Nexus.Domain.Projections
 
 open System
 open System.IO
-open FnMCP.IvanTheGeek.Domain
+open FnMCP.Nexus.Domain
 
 // Projection interfaces and common utilities
 

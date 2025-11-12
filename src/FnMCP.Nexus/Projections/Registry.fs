@@ -1,9 +1,9 @@
-module FnMCP.IvanTheGeek.Projections.Registry
+module FnMCP.Nexus.Projections.Registry
 
 open System
 open System.IO
 open System.Text
-open FnMCP.IvanTheGeek.Domain
+open FnMCP.Nexus.Domain
 
 // ============================================================================
 // PHASE 2: Projection Registry - Centralized tracking of all projections
@@ -24,7 +24,7 @@ type Registry = {
 }
 
 module RegistryIO =
-    open FnMCP.IvanTheGeek.Domain.Projections.FrontMatterParser
+    open FnMCP.Nexus.Domain.Projections.FrontMatterParser
 
     let private registryPath (basePath: string) =
         Path.Combine(basePath, "nexus", "projections", ".registry", "registry.yaml")

@@ -1,12 +1,12 @@
-module FnMCP.IvanTheGeek.Tools.Learning
+module FnMCP.Nexus.Tools.Learning
 
 open System
 open System.Collections.Generic
 open System.Text.Json
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.EventWriter
-open FnMCP.IvanTheGeek.Projections.Knowledge
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.EventWriter
+open FnMCP.Nexus.Projections.Knowledge
 
 // ============================================================================
 // PHASE 3: Learning Tools - Record and query F# knowledge

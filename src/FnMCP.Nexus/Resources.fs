@@ -1,6 +1,6 @@
-module FnMCP.IvanTheGeek.Resources
+module FnMCP.Nexus.Resources
 
-open FnMCP.IvanTheGeek.Types
+open FnMCP.Nexus.Types
 
 // Resource helper functions and definitions
 

@@ -1,14 +1,15 @@
-module FnMCP.IvanTheGeek.Program
+module FnMCP.Nexus.Program
 
 open System
 open System.IO
 open System.Text
 open System.Text.Json
 open System.Text.Json.Serialization
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.ContentProvider
-open FnMCP.IvanTheGeek.FileSystemProvider
-open FnMCP.IvanTheGeek.McpServer
+open FnMCP.Nexus
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.ContentProvider
+open FnMCP.Nexus.FileSystemProvider
+open FnMCP.Nexus.McpServer
 
 // JSON serialization options
 let jsonOptions = JsonSerializerOptions()
@@ -18,7 +19,7 @@ jsonOptions.DefaultIgnoreCondition <- JsonIgnoreCondition.WhenWritingNull
 
 // Log to stderr (stdout is for JSON-RPC communication)
 let log message =
-    Console.Error.WriteLine($"[FnMCP.IvanTheGeek] {message}")
+    Console.Error.WriteLine($"[FnMCP.Nexus] {message}")
 
 // Process a single JSON-RPC request (payload is a full JSON object string)
 let processRequest (server: McpServer) (payload: string) = async {
@@ -287,7 +288,7 @@ let main argv =
                     let projectRoot = Path.GetDirectoryName(AppContext.BaseDirectory)
                     Path.Combine(projectRoot, "context-library")
 
-            log "FnMCP.IvanTheGeek MCP Server starting..."
+            log "FnMCP.Nexus MCP Server starting..."
             log $"Protocol version: 2024-11-05"
             log $"Context library path: {contextLibraryPath}"
 

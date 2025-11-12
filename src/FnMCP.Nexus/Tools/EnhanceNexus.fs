@@ -1,11 +1,11 @@
-module FnMCP.IvanTheGeek.Tools.EnhanceNexus
+module FnMCP.Nexus.Tools.EnhanceNexus
 
 open System
 open System.Collections.Generic
 open System.Text.Json
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.EventWriter
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.EventWriter
 
 // ============================================================================
 // PHASE 2: EnhanceNexus - High-level workflow tool for Claude
@@ -150,9 +150,9 @@ let enhanceNexus (basePath: string) (eventSpecs: EventSpec list) (projectionsToR
         let projPath =
             match projName.ToLower() with
             | "timeline" ->
-                FnMCP.IvanTheGeek.Projections.Timeline.regenerateTimeline basePath
+                FnMCP.Nexus.Projections.Timeline.regenerateTimeline basePath
             | "metrics" ->
-                FnMCP.IvanTheGeek.Projections.Metrics.MetricsWriter.regenerateMetrics basePath
+                FnMCP.Nexus.Projections.Metrics.MetricsWriter.regenerateMetrics basePath
             | _ ->
                 ""  // Unknown projection type
 

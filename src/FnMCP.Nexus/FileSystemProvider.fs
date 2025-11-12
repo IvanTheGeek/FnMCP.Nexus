@@ -1,8 +1,8 @@
-module FnMCP.IvanTheGeek.FileSystemProvider
+module FnMCP.Nexus.FileSystemProvider
 
 open System.IO
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.ContentProvider
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.ContentProvider
 
 // File system provider that reads markdown files on-demand (no caching)
 type FileSystemProvider(rootPath: string) =

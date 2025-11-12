@@ -1,12 +1,12 @@
-namespace FnMCP.IvanTheGeek.Tools
+namespace FnMCP.Nexus.Tools
 
 open System
 open System.Text
 open System.Text.Json
-open FnMCP.IvanTheGeek.Types
-open FnMCP.IvanTheGeek.Domain
-open FnMCP.IvanTheGeek.Domain.EventWriter
-open FnMCP.IvanTheGeek.Projections.Timeline
+open FnMCP.Nexus.Types
+open FnMCP.Nexus.Domain
+open FnMCP.Nexus.Domain.EventWriter
+open FnMCP.Nexus.Projections.Timeline
 
 // Tool definitions for event-sourced Nexus
 module EventTools =
