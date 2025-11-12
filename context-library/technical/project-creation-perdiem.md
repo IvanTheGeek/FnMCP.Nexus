@@ -93,7 +93,19 @@ Click the MCP prompt:
 
 **CRITICAL:** Every response must end with detailed token usage display.
 
-Format: 📊 emoji, 20-char visual bar (█/░), comma-separated numbers, allocation tree with conversation breakdown, status legend.
+**BAR CALCULATION (verify before displaying):**
+```
+percentage = (used / total) * 100
+filled_blocks = round(percentage / 5)
+empty_blocks = 20 - filled_blocks
+```
+
+**Quick verification:**
+- 25.7% → round(25.7/5) = round(5.14) = 5 filled blocks
+- 48.9% → round(48.9/5) = round(9.78) = 10 filled blocks
+- 72.7% → round(72.7/5) = round(14.54) = 15 filled blocks
+
+**Format:** 📊 emoji, 20-char visual bar (█/░), comma-separated numbers, allocation tree with conversation breakdown, status legend.
 
 See `technical/context-monitoring.md` for complete specification.
 
@@ -329,7 +341,7 @@ git commit -m "feat: Create PerDiem separate project with bootstrap"
 
 **Create checklist for moving apps to own projects:**
 1. ✅ Create new Claude Project
-2. ✅ Create project-specific bootstrap file
+2. ✅ Create project-specific bootstrap file (with token calculation!)
 3. ✅ Upload bootstrap as Project Knowledge
 4. ✅ Verify MCP server accessible
 5. ✅ Test document access via MCP
@@ -337,7 +349,8 @@ git commit -m "feat: Create PerDiem separate project with bootstrap"
 7. ✅ Test continuation prompts
 8. ✅ Verify token efficiency
 9. ✅ Confirm project isolation
-10. ✅ Document in events
+10. ✅ Verify token display calculation correct
+11. ✅ Document in events
 
 **Save this checklist** for when you graduate LaundryLog to its own project.
 
@@ -354,6 +367,7 @@ git commit -m "feat: Create PerDiem separate project with bootstrap"
 - [ ] Timeline filtering working
 - [ ] Continuation prompt working  
 - [ ] Token efficiency confirmed
+- [ ] Token display calculation correct
 - [ ] Cross-project isolation verified
 - [ ] Success events created
 - [ ] Changes committed to git
@@ -410,6 +424,13 @@ git commit -m "feat: Create PerDiem separate project with bootstrap"
 - Verify SessionState event has correct project field
 - Check MCP prompts code filters by project correctly
 - May need to update prompt implementation in server
+
+### Problem: Token calculation display wrong
+
+**Solution:**
+- Verify bootstrap includes full token calculation section with formula
+- Check verification examples are present (25.7%→5, 48.9%→10, 72.7%→15)
+- Token calculation should work from first message in new chat
 
 ---
 

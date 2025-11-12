@@ -8,6 +8,20 @@
 
 ---
 
+## Bootstrap File Template
+
+All bootstrap files MUST include:
+1. Project identification and scope
+2. How to start conversations (prompts + manual)
+3. Project structure and file paths
+4. **Token calculation formula with verification examples**
+5. Context management explanation
+6. Event sourcing location
+
+**Critical:** Token calculation section ensures correct display in every new chat.
+
+---
+
 ## Step 1: Create the Bootstrap File
 
 **Action:** Create `nexus-bootstrap.md` with the following content:
@@ -57,7 +71,19 @@ Click one of the MCP prompts:
 
 **CRITICAL:** Every response must end with detailed token usage display.
 
-Format: 📊 emoji, 20-char visual bar (█/░), comma-separated numbers, allocation tree with conversation breakdown, status legend.
+**BAR CALCULATION (verify before displaying):**
+```
+percentage = (used / total) * 100
+filled_blocks = round(percentage / 5)
+empty_blocks = 20 - filled_blocks
+```
+
+**Quick verification:**
+- 25.7% → round(25.7/5) = round(5.14) = 5 filled blocks
+- 48.9% → round(48.9/5) = round(9.78) = 10 filled blocks
+- 72.7% → round(72.7/5) = round(14.54) = 15 filled blocks
+
+**Format:** 📊 emoji, 20-char visual bar (█/░), comma-separated numbers, allocation tree with conversation breakdown, status legend.
 
 See `technical/context-monitoring.md` for complete specification.
 
@@ -268,6 +294,13 @@ git commit -m "docs: Update Nexus Project to use minimal bootstrap file"
 - Verify MCP server prompts capability working
 - May need to restart Claude Desktop
 
+### Problem: Token calculation display wrong
+
+**Solution:**
+- Verify bootstrap includes full token calculation section with formula
+- Check verification examples are present
+- Token calculation should work from first message in new chat
+
 ---
 
 ## Success Checklist
@@ -280,6 +313,7 @@ git commit -m "docs: Update Nexus Project to use minimal bootstrap file"
 - [ ] Token savings confirmed (~5,500 tokens)
 - [ ] MCP document access working
 - [ ] Continuation prompts working
+- [ ] Token display calculation correct
 - [ ] Event documented
 - [ ] Changes committed to git
 
