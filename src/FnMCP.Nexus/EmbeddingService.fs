@@ -1,28 +1,46 @@
 module FnMCP.Nexus.EmbeddingService
 
 open System
+open System.Net.Http
+open System.Text
+open System.Text.Json
 
-/// Generate embedding vector for a text query
-///
-/// PLACEHOLDER: This will be implemented once we add an embedding API endpoint
-/// to the VPS that wraps the sentence-transformers model (all-MiniLM-L6-v2).
-///
-/// For now, returns a dummy 384-dimensional vector for testing purposes.
-/// The real implementation will call the embedding API via HTTP.
+type EmbedRequest = { text: string }
+type EmbedResponse = {
+    embedding: float list
+    dimension: int
+}
+
+/// Get embedding API URL from environment variable or use default
+/// Environment variables are loaded from .env file at application startup
+let private getEmbeddingApiUrl () =
+    Environment.GetEnvironmentVariable("EMBEDDING_API_URL")
+    |> Option.ofObj
+    |> Option.defaultValue "http://66.179.208.238:5000/embed"
+
+let private httpClient = new HttpClient()
+
 let embed (text: string) : Async<float list> =
     async {
-        // TODO: Implement actual embedding API call
-        // For now, return a dummy vector of 384 dimensions (matching all-MiniLM-L6-v2)
-        // This allows testing the integration without the embedding service
+        try
+            let apiUrl = getEmbeddingApiUrl()
+            let request = { text = text }
+            let jsonContent = JsonSerializer.Serialize(request)
+            let content = new StringContent(jsonContent, Encoding.UTF8, "application/json")
 
-        // Generate a simple deterministic vector based on text hash for testing
-        // This is NOT semantically meaningful, just for infrastructure testing
-        let rng = Random(text.GetHashCode())
-        let dummyVector = List.init 384 (fun _ -> rng.NextDouble() * 2.0 - 1.0)
-
-        return dummyVector
+            let! response = httpClient.PostAsync(apiUrl, content) |> Async.AwaitTask
+            let! responseBody = response.Content.ReadAsStringAsync() |> Async.AwaitTask
+            
+            if response.IsSuccessStatusCode then
+                let embedResponse = JsonSerializer.Deserialize<EmbedResponse>(responseBody)
+                return embedResponse.embedding
+            else
+                printfn "Embedding API error: %s" responseBody
+                return List.replicate 384 0.0 // Fallback to zero vector
+        with ex ->
+            printfn "Embedding service exception: %s" ex.Message
+            return List.replicate 384 0.0 // Fallback to zero vector
     }
-
 /// Future implementation note:
 ///
 /// When the embedding API is ready on the VPS, this function should:

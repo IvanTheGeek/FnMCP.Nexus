@@ -242,6 +242,17 @@ let runCliMode (contextLibraryPath: string) (command: string) (args: string arra
 [<EntryPoint>]
 let main argv =
     try
+        // Load environment variables from .env file (if it exists)
+        // This must be done before any configuration is read
+        try
+            DotNetEnv.Env.Load() |> ignore
+            log "Loaded environment variables from .env file"
+        with
+        | :? FileNotFoundException ->
+            log "No .env file found - using environment variables and defaults"
+        | ex ->
+            log $"Warning: Failed to load .env file: {ex.Message}"
+
         // Detect mode: CLI (2+ args) vs MCP (0-1 args)
         match argv with
         | args when args.Length >= 2 ->

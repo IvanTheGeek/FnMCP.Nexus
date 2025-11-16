@@ -114,6 +114,7 @@ let search (config: QdrantConfig) (vector: float list) (limit: int) : SearchResu
         []
 
 /// Get Qdrant configuration from environment variables or defaults
+/// Environment variables are loaded from .env file at application startup
 let getConfig () : QdrantConfig =
     {
         BaseUrl =
@@ -124,5 +125,8 @@ let getConfig () : QdrantConfig =
             Environment.GetEnvironmentVariable("QDRANT_API_KEY")
             |> Option.ofObj
             |> Option.defaultValue ""
-        CollectionName = "conversations"
+        CollectionName =
+            Environment.GetEnvironmentVariable("QDRANT_COLLECTION")
+            |> Option.ofObj
+            |> Option.defaultValue "conversations"
     }
