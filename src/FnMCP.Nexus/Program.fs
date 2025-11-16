@@ -245,11 +245,20 @@ let main argv =
         // Load environment variables from .env file (if it exists)
         // This must be done before any configuration is read
         try
-            DotNetEnv.Env.Load() |> ignore
-            log "Loaded environment variables from .env file"
+            // Try to load .env from current directory first
+            let currentDirEnv = Path.Combine(Directory.GetCurrentDirectory(), ".env")
+            // Also try binary directory
+            let binaryDirEnv = Path.Combine(Path.GetDirectoryName(AppContext.BaseDirectory), ".env")
+
+            if File.Exists(currentDirEnv) then
+                DotNetEnv.Env.Load(currentDirEnv) |> ignore
+                log $"Loaded environment variables from .env file: {currentDirEnv}"
+            elif File.Exists(binaryDirEnv) then
+                DotNetEnv.Env.Load(binaryDirEnv) |> ignore
+                log $"Loaded environment variables from .env file: {binaryDirEnv}"
+            else
+                log "No .env file found - using environment variables and defaults"
         with
-        | :? FileNotFoundException ->
-            log "No .env file found - using environment variables and defaults"
         | ex ->
             log $"Warning: Failed to load .env file: {ex.Message}"
 
@@ -293,11 +302,18 @@ let main argv =
             // MCP Server Mode
             let contextLibraryPath =
                 match argv with
-                | [| path |] -> path
+                | [| path |] ->
+                    // Command-line argument takes precedence
+                    path
                 | _ ->
-                    // Default to context-library relative to binary location
-                    let projectRoot = Path.GetDirectoryName(AppContext.BaseDirectory)
-                    Path.Combine(projectRoot, "context-library")
+                    // Check environment variable from .env file
+                    let envPath = Environment.GetEnvironmentVariable("CONTEXT_LIBRARY_PATH")
+                    if not (String.IsNullOrWhiteSpace(envPath)) then
+                        envPath
+                    else
+                        // Default to context-library relative to binary location
+                        let projectRoot = Path.GetDirectoryName(AppContext.BaseDirectory)
+                        Path.Combine(projectRoot, "context-library")
 
             log "FnMCP.Nexus MCP Server starting..."
             log $"Protocol version: 2024-11-05"
