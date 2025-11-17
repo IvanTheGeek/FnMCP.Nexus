@@ -63,8 +63,8 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
         return { Prompts = prompts }
     }
 
-    member _.HandleGetPrompt(name: string) = async {
-        let response = handleGetPrompt contextLibraryPath name
+    member _.HandleGetPrompt(name: string, args: Map<string, obj> option) = async {
+        let response = handleGetPrompt contextLibraryPath name args
         return response
     }
 
@@ -113,7 +113,20 @@ type McpServer(provider: IContentProvider, contextLibraryPath: string) =
                 | Some parameters ->
                     let jsonElement = parameters :?> JsonElement
                     let name = jsonElement.GetProperty("name").GetString()
-                    let! response = this.HandleGetPrompt(name)
+
+                    // Extract arguments if present
+                    let args =
+                        if jsonElement.TryGetProperty("arguments") |> fst then
+                            let argsElement = jsonElement.GetProperty("arguments")
+                            let argMap =
+                                argsElement.EnumerateObject()
+                                |> Seq.map (fun prop -> (prop.Name, box (prop.Value.GetString())))
+                                |> Map.ofSeq
+                            Some argMap
+                        else
+                            None
+
+                    let! response = this.HandleGetPrompt(name, args)
                     return Ok (box response)
                 | None ->
                     return Error {
