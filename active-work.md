@@ -87,6 +87,88 @@ This binary can be used for:
 
 ---
 
+## 2025-11-18: SSE Endpoint Naming Fix - Ready for Deployment
+
+### Status: ✅ CODE UPDATED - READY FOR BUILD & DEPLOY
+
+### Completed by Code - Session 4 (SSE Endpoint Naming)
+
+1. ✓ Identified endpoint naming issue: `/sse/events` was misleading
+2. ✓ Updated SSE endpoint from `/sse/events` to `/sse`
+3. ✓ Updated HttpServer.fs route configuration
+4. ✓ Updated Tools.fs API key generation message
+5. ✓ Verified SseTransport welcome message (already correct)
+6. ✓ Committed changes to git
+
+### Changes Made
+
+**File: `src/FnMCP.Nexus/Http/HttpServer.fs`**
+- Changed SSE route from `route "/events"` to `route ""`
+- Updated comment: "SSE stream endpoint for all MCP operations (tools, resources, prompts)"
+- Updated log message: `/sse/events` → `/sse`
+
+**File: `src/FnMCP.Nexus/Tools.fs`**
+- Updated API key generation output: `https://mcp.nexus.ivanthegeek.com/sse/events` → `.../sse`
+
+**Rationale:**
+The SSE endpoint name `/sse/events` was misleading because it handles ALL MCP operations (tools, resources, prompts), not just events. The generic `/sse` name better reflects that this is the SSE transport endpoint for the entire MCP protocol.
+
+### Next Steps for Next Session
+
+1. **Build Docker image** with updated code
+   ```bash
+   docker build -t nexus-mcp:fixed .
+   ```
+
+2. **Export and transfer to VPS**
+   ```bash
+   docker save nexus-mcp:fixed | gzip > /tmp/nexus-mcp-fixed-v2.tar.gz
+   scp /tmp/nexus-mcp-fixed-v2.tar.gz root@66.179.208.238:/tmp/
+   ```
+
+3. **Deploy on VPS**
+   ```bash
+   ssh root@66.179.208.238 "docker load < /tmp/nexus-mcp-fixed-v2.tar.gz && \
+     docker tag nexus-mcp:fixed nexus-mcp:latest && \
+     docker stop nexus-mcp && docker rm nexus-mcp && \
+     docker run -d --name nexus-mcp \
+       -v /data/event-store:/data/event-store \
+       --restart unless-stopped nexus-mcp:latest"
+   ```
+
+4. **Test updated endpoint**
+   ```bash
+   # Old endpoint (should 404)
+   curl -H "Authorization: Bearer KEY" http://66.179.208.238:18080/sse/events
+
+   # New endpoint (should work)
+   curl -H "Authorization: Bearer KEY" http://66.179.208.238:18080/sse
+   ```
+
+5. **Update Claude Desktop config** to use new endpoint:
+   ```json
+   {
+     "mcpServers": {
+       "nexus-vps": {
+         "url": "http://66.179.208.238:18080/sse",
+         "transport": {
+           "type": "sse",
+           "headers": {
+             "Authorization": "Bearer KvzmKD3aBYBmKY4pvOh/+NhwHBBxxiTeIKD2Kq/tAw4="
+           }
+         }
+       }
+     }
+   }
+   ```
+
+### Commit Information
+
+**Commit:** `0742fb8`
+**Message:** Fix SSE endpoint naming: /sse/events -> /sse
+
+---
+
 ## 2025-11-19: VPS Deployment Complete - SSE/WebSocket Operational
 
 ### Status: ✅ PRODUCTION READY - MCP SERVER ACCESSIBLE VIA HTTP/SSE
