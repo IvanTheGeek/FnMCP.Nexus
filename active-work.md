@@ -434,6 +434,21 @@ curl -I http://66.179.208.238:18080/sse/events
 - VPS: Docker image `nexus-mcp:latest` - Rebuilt with latest code
 - VPS: Container `nexus-mcp` - Redeployed with HTTP transport
 - Local: `active-work.md` - This documentation
+- Local: `docs/2025-11-19-sse-debug-deployment.md` - Detailed debug report
+
+### Detailed Report
+
+For a comprehensive step-by-step analysis including timeline, issues discovered, and command reference, see:
+**[SSE Transport Debug & Deployment Report](docs/2025-11-19-sse-debug-deployment.md)**
+
+This report contains:
+- Complete timeline of debugging steps
+- Detailed issue analysis and root causes
+- Docker BuildKit troubleshooting attempts
+- Full deployment configuration
+- Verification checklist
+- AI-readable structured data
+- Command reference for future deployments
 
 ### Technical Notes
 
