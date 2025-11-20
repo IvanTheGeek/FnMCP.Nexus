@@ -10,10 +10,11 @@ open Microsoft.Extensions.Hosting
 open Oxpecker
 open FnMCP.Nexus.McpServer
 open FnMCP.Nexus.Transport.SseTransport
+open FnMCP.Nexus.Transport.HttpStreamingTransport
 open FnMCP.Nexus.Transport.WebSocketTransport
 open FnMCP.Nexus.Auth.AuthMiddleware
 
-// HTTP server for remote MCP access via SSE and WebSocket
+// HTTP server for remote MCP access via HTTP Streaming, SSE (deprecated), and WebSocket
 // Using Oxpecker 1.0 API: EndpointHandler = HttpContext -> Task
 
 let log message =
@@ -39,7 +40,7 @@ let configureApp (eventStorePath: string) (server: McpServer) (app: WebApplicati
                 do! ctx.Response.Body.WriteAsync(bytes, 0, bytes.Length)
             }
 
-    // SSE routes (auth required)
+    // SSE routes (deprecated but kept for backward compatibility)
     let sseRoutes = [
         // SSE stream endpoint for all MCP operations (tools, resources, prompts)
         GET [
@@ -59,7 +60,12 @@ let configureApp (eventStorePath: string) (server: McpServer) (app: WebApplicati
             route "/health" healthCheck
         ]
 
-        // SSE endpoints
+        // HTTP Streaming endpoint (current standard) - auth required
+        POST [
+            route "/mcp" (requireApiKey eventStorePath >=> handleHttpStreaming server)
+        ]
+
+        // SSE endpoints (deprecated but kept for backward compatibility)
         subRoute "/sse" sseRoutes
 
         // WebSocket endpoint (auth required)
@@ -99,8 +105,9 @@ let startHttpServer (port: int) (eventStorePath: string) (server: McpServer) : A
 
         log $"HTTP server configured:"
         log $"  - Health check: http://0.0.0.0:{port}/"
-        log $"  - SSE endpoint: http://0.0.0.0:{port}/sse"
-        log $"  - SSE message: http://0.0.0.0:{port}/sse/message"
+        log $"  - HTTP Streaming (current): http://0.0.0.0:{port}/mcp [POST]"
+        log $"  - SSE endpoint (deprecated): http://0.0.0.0:{port}/sse"
+        log $"  - SSE message (deprecated): http://0.0.0.0:{port}/sse/message"
         log $"  - WebSocket: ws://0.0.0.0:{port}/ws"
         log $"All endpoints except health require Bearer token authentication"
 

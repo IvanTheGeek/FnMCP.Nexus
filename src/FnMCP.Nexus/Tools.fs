@@ -205,7 +205,8 @@ Description: {description}
 To use this key with Claude Web/Desktop/Mobile:
 1. Add to your MCP client configuration
 2. Use as: Authorization: Bearer {key}
-3. Connect to: https://mcp.nexus.ivanthegeek.com/sse
+3. Connect to: https://mcp.nexus.ivanthegeek.com/mcp (HTTP streaming)
+   Or legacy SSE: https://mcp.nexus.ivanthegeek.com/sse
 
 Example curl test:
 curl -H "Authorization: Bearer {key}" https://mcp.nexus.ivanthegeek.com/health

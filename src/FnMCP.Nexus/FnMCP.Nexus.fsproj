@@ -67,6 +67,7 @@
         <!-- Transport layer (Phase 3) -->
         <Compile Include="Transport/StdioTransport.fs" />
         <Compile Include="Transport/SseTransport.fs" />
+        <Compile Include="Transport/HttpStreamingTransport.fs" />
         <Compile Include="Transport/WebSocketTransport.fs" />
 
         <!-- HTTP server (Phase 3) -->
